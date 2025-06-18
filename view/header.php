@@ -1,7 +1,11 @@
 <?php
-// Base URL of the project
-$base_url = '/forum-project';
+//Had to change the base url to a dynamic one to test
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+$host = $_SERVER['HTTP_HOST'];
+$base_path = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+$base_url = $protocol . $host . $base_path;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,10 +22,11 @@ $base_url = '/forum-project';
             <a class="navbar-brand" href="index.php">Simple Forum</a> <!-- Site Title -->
             <div class="navbar-nav ms-auto">
                 <!-- Sessions: check if user is logged in. If user is logged in, show the user ID in navbar with <span>. If user is logged in, display Logout link and Login and Register links do not dispaly. Else, Login and Register links are displayed. -->
-                <a class="nav-link" href="<?php echo $base_url; ?>/index.php?action=login">Login</a>
-                <a class="nav-link" href="<?php echo $base_url; ?>/index.php?action=register">Register</a>
-                <a class="nav-link" href="<?php echo $base_url; ?>/index.php?action=logout">Logout</a>
-                <a class="nav-link" href="<?php echo $base_url; ?>/index.php?action=add_post">New Post</a>
+                <a class="nav-link" href="<?= $base_url ?>/index.php?action=login">Login</a>
+				<a class="nav-link" href="<?= $base_url ?>/index.php?action=register">Register</a>
+				<a class="nav-link" href="<?= $base_url ?>/index.php?action=logout">Logout</a>
+				<a class="nav-link" href="<?= $base_url ?>/index.php?action=add_post">New Post</a>
+
             </div>
         </div>
     </nav>
