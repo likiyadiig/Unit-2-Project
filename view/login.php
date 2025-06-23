@@ -21,7 +21,7 @@
                     </div>
                     <div class="mb-3 form-check">
                         <!-- Cookies: implement remember me feature -->
-                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember" value="1">
                         <label class="form-check-label" for="remember">Remember Me</label>
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>

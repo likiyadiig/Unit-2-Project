@@ -1,5 +1,38 @@
 <?php
+// TEMPORARY - just for testing remember-me
+session_start();
+if (isset($_SESSION['user_id'])) {
+    echo "<div style='background: green; color: white; padding: 10px;'>AUTO-LOGGED IN as user ID: " . $_SESSION['user_id'] . "</div>";
+}
+// Check for remember me cookie before any action processing - JS
+$remember_token = $_COOKIE['remember_me'] ?? null;
+
+if ($remember_token) {
+    require_once('model/user_db.php');
+    $user = get_user_by_token($remember_token);
+    
+    if ($user) {
+        // Auto-login the user
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+    } else {
+        // Invalid token - delete the bad cookie
+        setcookie('remember_me', '', strtotime('-1 year'), '/');
+    }
+}
+
+
 $action = filter_input(INPUT_GET, 'action');
+
+// Had an issue with the register case not creating a user in the db, this fixed it - JS
+// checks POST for action
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $action = $_POST['action'];
+}
+
 if ($action === NULL) {
     $action = 'forum_list';
 }
@@ -21,6 +54,7 @@ switch ($action) {
 
     case 'login':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
             require_once('model/user_db.php');
 
             $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -28,8 +62,22 @@ switch ($action) {
 
             $user = validate_user($username, $password); 
 
+
             if ($user) {
-                session_start();
+                // Remember me check - JS
+                $remember = filter_input(INPUT_POST, 'remember', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $user_id = $user['id'];
+                
+                if ($remember) {
+                    echo "Remember me was checked!";
+                    $token = bin2hex(random_bytes(16)); // random 16 digit token
+                    set_remember_token($user_id, $token);
+                    setcookie('remember_me', $token, time() + (86400 * 30), '/');
+                }
+                
+                if (session_status() === PHP_SESSION_NONE) { // rewrote this just a little for error handling - JS
+                    session_start();
+                }
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 header("Location: index.php");

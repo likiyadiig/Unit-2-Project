@@ -34,4 +34,34 @@ function validate_user($username, $password) {
     }
 }
 
+// Grab remember me token - JS
+function get_user_by_token($token) {
+    global $db;
+
+    $query = 'SELECT * FROM users WHERE remember_token = :token';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':token', $token);
+    $statement->execute();
+    $user = $statement->fetch();
+    $statement->closeCursor();
+
+    if ($user) {
+        return $user;
+    } else {
+        return false;
+    }
+}
+
+// Setting token to user - JS
+function set_remember_token($user_id, $token) {
+    global $db;
+    
+    $query = 'UPDATE users SET remember_token = :token WHERE id = :user_id';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':token', $token);
+    $statement->bindValue(':user_id', $user_id);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
 ?>
