@@ -1,25 +1,15 @@
 <?php
-// TEMPORARY - just for testing remember-me
-session_start();
-if (isset($_SESSION['user_id'])) {
-    echo "<div style='background: green; color: white; padding: 10px;'>AUTO-LOGGED IN as user ID: " . $_SESSION['user_id'] . "</div>";
-}
-// Check for remember me cookie before any action processing - JS
-$remember_token = $_COOKIE['remember_me'] ?? null;
+require_once('model/session_db.php');
+require_once('model/user_db.php');
 
-if ($remember_token) {
-    require_once('model/user_db.php');
-    $user = get_user_by_token($remember_token);
-    
+start_custom_session();
+
+if (!is_user_logged_in() && isset($_COOKIE['remember_me'])) {
+    $token = $_COOKIE['remember_me'];
+    $user = get_user_by_token($token);
     if ($user) {
-        // Auto-login the user
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
+        log_in_user($user);
     } else {
-        // Invalid token - delete the bad cookie
         setcookie('remember_me', '', strtotime('-1 year'), '/');
     }
 }
@@ -78,8 +68,8 @@ switch ($action) {
                 if (session_status() === PHP_SESSION_NONE) { // rewrote this just a little for error handling - JS
                     session_start();
                 }
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
+                //added 6/24/25, JK
+                log_in_user($user);
                 header("Location: index.php");
                 exit();
             } else {
@@ -178,6 +168,11 @@ switch ($action) {
         } else {
             header("Location: index.php?action=forum_list");
         }
+        exit();
+    //added 6/24/25, JK
+    case 'logout':
+        log_out_user();
+        header("Location: index.php?action=login");
         exit();
 
     default:
