@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require_once('model/session_db.php');
 require_once('model/user_db.php');
 
