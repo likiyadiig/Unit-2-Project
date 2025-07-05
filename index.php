@@ -61,7 +61,6 @@ switch ($action) {
                 $user_id = $user['id'];
                 
                 if ($remember) {
-                    echo "Remember me was checked!";
                     $token = bin2hex(random_bytes(16)); // random 16 digit token
                     set_remember_token($user_id, $token);
                     setcookie('remember_me', $token, time() + (86400 * 30), '/');
@@ -92,11 +91,16 @@ switch ($action) {
             $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             if ($username && $email && $password) {
-                register_user($username, $email, $password);
-                header("Location: index.php?action=login");
-                exit();
+                try {
+                    register_user($username, $email, $password);
+                    $success = "Registration successful! You can now log in.";
+                    include('view/register.php');
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                    include('view/register.php');
+                }
             } else {
-                $error = "Please fill out all fields.";
+                $error = "Please fill out all fields correctly.";
                 include('view/register.php');
             }
         } else {

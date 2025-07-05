@@ -7,8 +7,17 @@
                 <h3>Register</h3>
             </div>
             <div class="card-body">
-                <!-- Sessions: add success or error message to display here if registration fails/succeeds -->
-                <!-- CRUD: Handle POST data in index.php - validate inputs, insert user into database -->
+                <!-- Display error or success messages -->
+                <?php if (isset($error)): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= htmlspecialchars($error) ?>
+                    </div>
+                <?php endif; ?>
+                <?php if (isset($success)): ?>
+                    <div class="alert alert-success" role="alert">
+                        <?= htmlspecialchars($success) ?>
+                    </div>
+                <?php endif; ?>
                 <form method="post" action="index.php">
                     <input type="hidden" name="action" value="register">
                     <div class="mb-3">

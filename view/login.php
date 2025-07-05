@@ -8,7 +8,12 @@
                 <h3>Login</h3>
             </div>
             <div class="card-body">
-                <!-- Sessions: add error message to display here if login fails -->
+                <!-- Display error message if login fails -->
+                <?php if (isset($error)): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= htmlspecialchars($error) ?>
+                    </div>
+                <?php endif; ?>
                 <form method="post" action="index.php">
                     <input type="hidden" name="action" value="login">
                     <div class="mb-3">
@@ -20,7 +25,6 @@
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div class="mb-3 form-check">
-                        <!-- Cookies: implement remember me feature -->
                         <input type="checkbox" class="form-check-input" id="remember" name="remember" value="1">
                         <label class="form-check-label" for="remember">Remember Me</label>
                     </div>

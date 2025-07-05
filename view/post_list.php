@@ -20,9 +20,10 @@ $posts = get_posts_by_category($category_id);
     <div class="card p-3 mb-3">
         <h4><?= htmlspecialchars($post['title']); ?></h4>
         <p><?= nl2br(htmlspecialchars($post['content'])); ?></p>
-        <a href="index.php?action=delete_post&id=<?= $post['id']; ?>" class="btn btn-danger mt-2">Delete</a>
-        
-        <a href="index.php?action=edit_post&id=<?= $post['id']; ?>" class="btn btn-secondary mt-2 ms-2">Edit</a>
+        <div class="d-flex gap-2 mt-2">
+            <a href="index.php?action=edit_post&id=<?= $post['id']; ?>" class="btn btn-secondary btn-sm" style="width: 80px;">Edit</a>
+            <a href="index.php?action=delete_post&id=<?= $post['id']; ?>" class="btn btn-danger btn-sm" style="width: 80px;">Delete</a>
+        </div>
     </div>
 <?php endforeach; ?>
 

@@ -13,8 +13,6 @@ include('header.php');
 
 <div class="row">
     <div class="col-md-8">
-        <!-- Sessions: check if user is logged in, if not redirect to login page -->
-
         <form method="post" action="index.php?action=add_post&category_id=<?= $category_id ?>">
             <input type="hidden" name="category_id" value="<?= $category_id ?>">
             <div class="mb-3">

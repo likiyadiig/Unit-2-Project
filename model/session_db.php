@@ -15,12 +15,6 @@ function is_user_logged_in() {
     return isset($_SESSION['user_id']);
 }
 
-// Log in user by setting session variable
-function log_in_user($user) {
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['username'] = $user['username'];
-}
-
 function log_out_user() {
     session_unset();
     session_destroy();

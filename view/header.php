@@ -21,12 +21,18 @@ $base_url = $protocol . $host . $base_path;
         <div class="container">
             <a class="navbar-brand" href="index.php">Simple Forum</a> <!-- Site Title -->
             <div class="navbar-nav ms-auto">
-                <!-- Sessions: check if user is logged in. If user is logged in, show the user ID in navbar with <span>. If user is logged in, display Logout link and Login and Register links do not dispaly. Else, Login and Register links are displayed. -->
-                <a class="nav-link" href="<?= $base_url ?>/index.php?action=login">Login</a>
-				<a class="nav-link" href="<?= $base_url ?>/index.php?action=register">Register</a>
-				<a class="nav-link" href="<?= $base_url ?>/index.php?action=logout">Logout</a>
-				<a class="nav-link" href="<?= $base_url ?>/index.php?action=add_post">New Post</a>
-
+                <?php if (is_user_logged_in()): ?>
+                    <!-- User is logged in - show user info and logout -->
+                    <span class="navbar-text me-3">
+                        Welcome, <?= htmlspecialchars($_SESSION['username']) ?> (ID: <?= $_SESSION['user_id'] ?>)
+                    </span>
+                    <a class="nav-link" href="<?= $base_url ?>/index.php?action=add_post">New Post</a>
+                    <a class="nav-link" href="<?= $base_url ?>/index.php?action=logout">Logout</a>
+                <?php else: ?>
+                    <!-- User is not logged in - show login and register -->
+                    <a class="nav-link" href="<?= $base_url ?>/index.php?action=login">Login</a>
+                    <a class="nav-link" href="<?= $base_url ?>/index.php?action=register">Register</a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>

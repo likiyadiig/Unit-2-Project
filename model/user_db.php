@@ -6,14 +6,28 @@ require_once('database.php');
 function register_user($username, $email, $password) {
     global $db;
 
-    $query = 'INSERT INTO users (username, email, password) 
-              VALUES (:username, :email, :password)';
-    $statement = $db->prepare($query);
-    $statement->bindValue(':username', $username);
-    $statement->bindValue(':email', $email);
-    $statement->bindValue(':password', password_hash($password, PASSWORD_DEFAULT)); 
-    $statement->execute();
-    $statement->closeCursor();
+    try {
+        $query = 'INSERT INTO users (username, email, password) 
+                  VALUES (:username, :email, :password)';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':username', $username);
+        $statement->bindValue(':email', $email);
+        $statement->bindValue(':password', password_hash($password, PASSWORD_DEFAULT)); 
+        $statement->execute();
+        $statement->closeCursor();
+        return true;
+    } catch (PDOException $e) {
+        // Check if it's a duplicate entry error
+        if ($e->getCode() == 23000) {
+            if (strpos($e->getMessage(), 'email') !== false) {
+                throw new Exception("Email address is already registered.");
+            } else {
+                throw new Exception("Username is already taken.");
+            }
+        } else {
+            throw new Exception("Registration failed. Please try again.");
+        }
+    }
 }
 
 //Validate user login credentials
