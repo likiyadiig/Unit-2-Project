@@ -6,6 +6,11 @@ function start_custom_session() {
     session_start();
 }
 
+function log_in_user($user) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['username'] = $user['username'];
+}
+
 function is_user_logged_in() {
     return isset($_SESSION['user_id']);
 }
